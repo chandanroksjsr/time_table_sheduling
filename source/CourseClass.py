@@ -1,16 +1,16 @@
 #represents a class(L/T/P)
 import Value
 class CourseClass:
-	def __init__(self,subject="XYZ",groups=[],teacher="XYZ",room="XYZ",duration=1,lab=False):
+	def __init__(self,subject="XYZ",group=[],teacher="XYZ",room="XYZ",duration=1,lab=False):
 		self.subject=subject
-		self.groups=groups
+		self.group=group
 		self.teacher=teacher
 		self.room=room
 		self.duration=duration
 		self.lab=lab
 	def display(self):
 		print("subject = ",self.subject,\
-			"\ngroups = ",self.groups,\
+			"\ngroup = ",self.group,\
 			"\nteacher = ",self.teacher,\
 			"\nroom = ",self.room,\
 			"\nduration = ",self.duration,\
