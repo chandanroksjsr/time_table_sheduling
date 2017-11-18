@@ -23,7 +23,7 @@ class CourseClass:
 		l=inp.split("\n")
 		#print(len(l))
 		del(l[0])	#ignore first line
-		del(l[len(l)-1])	#ignore first line
+		del(l[len(l)-1])	#ignore last line
 		#print(len(l))
 		for i in range(len(l)):
 			l[i]=l[i].split(",")
