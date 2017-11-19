@@ -9,6 +9,7 @@ _subject=[]
 _group=[]
 _class=[]
 _max_fitness=-1
+_max_pop=Value.max_pop
 def getDuration(s):
 	for i in range(len(_subject)):
 		if _subject[i][0]==s:
@@ -67,12 +68,6 @@ def init_pop():
 		population.append(TimeTable())
 		population[i].allot_classes()
 
-def crossover(parent1,parent2):
-	k=1
-
-def mutate(child):
-	k=1
-
 def isBadGene(l,k):
 	for i in l:
 		if i==k:
@@ -89,15 +84,60 @@ def fitness(parent):
 					if not isBadGene(bad_genes,k):
 						bad_genes.append(k)
 						sum=sum+1
+	#print(bad_genes)
 	return _max_fitness-sum
+
+def showFitness():
+	flist=[]
+	for i in population:
+		flist.append(fitness(i))
+	print(flist)
+	print(sum(flist)/len(flist))
+
+def killUnfit(l):
+	list.sort(population,reverse=True,key=fitness)
+	for i in range(l):
+		del(population[len(population)-1])
+
+def crossover(parent1,parent2):
+	child=[]
+	child.append(TimeTable())
+	child.append(TimeTable())
+	#for i in range(len(_class))
+	return child
+
+def mutate(child):
+	if(random.random()<Value.mutation_prob):
+		pass
+
+def reproduce(parent1,parent2):
+	child=crossover(parent1,parent2)
+	mutate(child[0])
+	mutate(child[1])
+	return child
+	
 
 def algorithm():
 	init_pop()
+	for i in range(10):
+		showFitness()
+		#kill unfit
+		killUnfit(_max_pop//2)
+		#populate
+		while len(population)<_max_pop:
+			#selection
+			p1=random.randint(0,len(population)-1)
+			p2=p1
+			while p2==p1:
+				p2=random.randint(0,len(population)-1)
+			#reproduction
+			child=reproduce(population[p1],population[p2])
+			#add to population
+			population.append(child[0])
+			population.append(child[1])
 
 initialise()
 algorithm()
-print(_max_fitness)
-for i in population:
-	print(fitness(i))
+
 
 #displayTT(population[0])

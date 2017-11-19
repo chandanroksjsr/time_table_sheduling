@@ -10,7 +10,6 @@ no_of_groups=9
 
 working_days=5
 working_hours=11
-crossover_prob=0.5
 crossover_points=5
 mutation_prob=0.1
 mutation_size=5
