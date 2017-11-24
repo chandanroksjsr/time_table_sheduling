@@ -87,20 +87,20 @@ class TimeTable:
 		return -1
 
 	def delClass(self,static_pos):
-		i=posInUnfit(static_pos)
+		i=self.posInUnfit(static_pos)
 		if i>=0:
 			c=self.unfit_chromo[i]
-			for d in range(len(c[1].duration)):
+			for d in range(c[1].duration):
 				for g in c[1].group:
-					self.table[c[1].time+pos][int(g)-1].remove(c)
+					self.table[c[1].time+d][int(g)-1].remove(c)
 			del(self.unfit_chromo[i])
 			return
 		i=posInBest(static_pos)
 		if i>=0:
 			c=self.best_chromo[i]
-			for d in range(len(c[1].duration)):
+			for d in range(c[1].duration):
 				for g in c[1].group:
-					self.table[c[1].time+pos][int(g)-1].remove(c)
+					self.table[c[1].time+d][int(g)-1].remove(c)
 			del(self.best_chromo[i])
 			return
 
@@ -154,7 +154,7 @@ def showFitness():
 	flist=[]
 	for i in _population:
 		flist.append(fitness(i))
-	print(flist)
+	#print(flist)
 	print(sum(flist)/len(flist))
 
 #kills most unfit l individuals from current population
@@ -169,27 +169,60 @@ def crossover(parent1,parent2):
 	child.append(TimeTable())
 	#uniform crossover
 	for i in range(len(_class)):
+		#*check if pos1 and pos2 does not fall in regions of best chromosomes*
 		pos1=parent1.posInBest(i)
 		pos2=parent2.posInBest(i)
 		if pos1>=0 and pos2>=0:
 			if random.randint(1,2)==1:
-				child[0].placeClassAt(pos1)
+				c1=deepcopy(parent1.best_chromo[pos1])
+				c2=deepcopy(parent2.best_chromo[pos2])
+				child[0].insertClass(c1)
+				child[1].insertClass(c2)
 			else:
-				pass
+				c1=deepcopy(parent1.best_chromo[pos1])
+				c2=deepcopy(parent2.best_chromo[pos2])
+				child[0].insertClass(c2)
+				child[1].insertClass(c1)
 
 		elif pos1>=0:
-			pass
+			c1=deepcopy(parent1.best_chromo[pos1])
+			c2=deepcopy(c1)
+			child[0].insertClass(c1)
+			child[1].insertClass(c2)
 		elif pos2>=0:
-			pass
+			c1=deepcopy(parent2.best_chromo[pos2])
+			c2=deepcopy(c1)
+			child[0].insertClass(c1)
+			child[1].insertClass(c2)
 		else:
+			#*check if pos1 and pos2 does not fall in regions of best chromosomes*
 			pos1=parent1.posInUnfit(i)
 			pos2=parent2.posInUnfit(i)
+			if random.randint(1,2)==1:
+				c1=deepcopy(parent1.unfit_chromo[pos1])
+				c2=deepcopy(parent2.unfit_chromo[pos2])
+				child[0].insertClass(c1)
+				child[1].insertClass(c2)
+			else:
+				c1=deepcopy(parent1.unfit_chromo[pos1])
+				c2=deepcopy(parent2.unfit_chromo[pos2])
+				child[0].insertClass(c2)
+				child[1].insertClass(c1)
 		
 	return child
 
+#*affects positioning of chromosomes, deletes from middle inserts at the end*
 def mutate(child):
 	if(random.random()<Value.mutation_prob):
-		pass
+		mut_genes=random.sample(range(0, len(child.unfit_chromo)), Value.mutation_size)
+		for i in mut_genes:
+			tc=child.unfit_chromo[i]
+			c=deepcopy(tc)
+			#*check if pos1 and pos2 does not fall in regions of best chromosomes*
+			c[1].time=random.randint(0,len(child.table)-tc[1].duration)
+			child.delClass(tc[0])
+			child.insertClass(c)
+		
 
 def reproduce(parent1,parent2):
 	child=crossover(parent1,parent2)
@@ -200,8 +233,9 @@ def reproduce(parent1,parent2):
 
 def algorithm():
 	init_pop()
-	for i in range(10):
-		showFitness()
+	showFitness()
+	for i in range(60):
+		#showFitness()
 		#kill unfit
 		killUnfit(_max_pop//2)
 		#populate
@@ -217,6 +251,7 @@ def algorithm():
 			#add to population
 			_population.append(child[0])
 			_population.append(child[1])
+	showFitness()
 
 initialise()
 algorithm()
