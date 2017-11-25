@@ -24,6 +24,13 @@ def getSlots(s):
 			return _subject[i][1]
 	return -1
 
+#checks if a class is already present in the list
+def isPresent(l,k):
+	for i in l:
+		if i==k:
+			return True
+	return False
+
 def initialise():	#read input data in program
 	global _subject
 	global _group
@@ -41,14 +48,25 @@ def initialise():	#read input data in program
 			for k in range(s):	#for each slot
 				_class.append(cc)
 	_max_fitness=len(_class)
+	print("Total Classes : "+str(len(_class)))
 
-def displayTT(t):	#complete tt
+def displayTT(t,g):	#tt for a gievn group
+	index=1
 	for i in range(len(t.table)):
-		print(t.table[i])
+		print("\n"+str(index)+" : ", end=' ')
+		for j in range(len(t.table[i][g-1])):
+			print(t.table[i][g-1][j][1].subject,end=' ,')
+		index=index+1
 
-'''def displayTT(t,g):	#tt for a gievn group
+'''def displayTT(t):	#tt for a gievn group
+	index=1
 	for i in range(len(t.table)):
-		print(t.table[i][g-1])'''
+		print("\n"+str(index)+" : ", end=' ')
+		for g in range(1,4):
+			print("\t",end=' ')
+			for j in range(len(t.table[i][g-1])):
+				print("  |  "+t.table[i][g-1][j][1].subject,end=' ,')
+		index=index+1'''
 
 class TimeTable:
 
@@ -109,6 +127,19 @@ class TimeTable:
 		for d in range(c[1].duration):
 			for g in c[1].group:
 				self.table[c[1].time+d][int(g)-1].append(c)
+	def calculateFitness(self):
+		sum=0
+		bad_genes=[]
+		for i in range(len(self.table)):
+			for j in range(len(self.table[0])):
+				if(len(self.table[i][j])>1):
+					for k in self.table[i][j]:
+						if not isPresent(bad_genes,k):
+							bad_genes.append(k)
+							sum=sum+1
+		#print(bad_genes)
+		self.fitness=_max_fitness-sum
+		return self.fitness
 
 	def allotRandomClasses(self):
 		i=0	#to mark index corresponding to indexing in _class
@@ -123,6 +154,7 @@ class TimeTable:
 			c=[i,CourseClass(t_subject,t_group,t_time,t_teacher,t_room,t_duration,t_lab)]
 			self.insertClass(c)
 			i=i+1
+		self.calculateFitness()
 		
 #create initial population
 def init_pop():
@@ -130,44 +162,27 @@ def init_pop():
 		_population.append(TimeTable())
 		_population[i].allotRandomClasses()
 
-#checks if a class is already present in the list of bad genes
-def isBadGene(l,k):
-	for i in l:
-		if i==k:
-			return True
-	return False
-
-def fitness(parent):
-	sum=0
-	bad_genes=[]
-	for i in range(len(parent.table)):
-		for j in range(len(parent.table[0])):
-			if(len(parent.table[i][j])>1):
-				for k in parent.table[i][j]:
-					if not isBadGene(bad_genes,k):
-						bad_genes.append(k)
-						sum=sum+1
-	#print(bad_genes)
-	return _max_fitness-sum
-
 def showFitness():
 	flist=[]
-	for i in _population:
-		flist.append(fitness(i))
-	#print(flist)
-	print(sum(flist)/len(flist))
+	for p in _population:
+		flist.append(p.fitness)
+	list.sort(flist,reverse=True)
+	#fitness of best time-table
+	print("{0:.2f}".format((flist[0]*100)/_max_fitness),end=" , ")
+	#average fitness
+	print("{0:.2f}".format(((sum(flist)/len(flist))*100)/_max_fitness))
 
 #kills most unfit l individuals from current population
 def killUnfit(l):
-	list.sort(_population,reverse=True,key=fitness)
+	list.sort(_population,reverse=True,key=TimeTable.calculateFitness)
 	for i in range(l):
 		del(_population[len(_population)-1])
 
+#uniform crossover
 def crossover(parent1,parent2):
 	child=[]
 	child.append(TimeTable())
 	child.append(TimeTable())
-	#uniform crossover
 	for i in range(len(_class)):
 		#*check if pos1 and pos2 does not fall in regions of best chromosomes*
 		pos1=parent1.posInBest(i)
@@ -212,8 +227,8 @@ def crossover(parent1,parent2):
 	return child
 
 #*affects positioning of chromosomes, deletes from middle inserts at the end*
-def mutate(child):
-	if(random.random()<Value.mutation_prob):
+def mutate(child,prob):
+	if(random.random()<prob):
 		mut_genes=random.sample(range(0, len(child.unfit_chromo)), Value.mutation_size)
 		for i in mut_genes:
 			tc=child.unfit_chromo[i]
@@ -222,20 +237,33 @@ def mutate(child):
 			c[1].time=random.randint(0,len(child.table)-tc[1].duration)
 			child.delClass(tc[0])
 			child.insertClass(c)
+		return True
+	return False
 		
 
 def reproduce(parent1,parent2):
 	child=crossover(parent1,parent2)
-	mutate(child[0])
-	mutate(child[1])
+	child[0].calculateFitness()
+	child[1].calculateFitness()
+	#mutation in offsprings
+	if mutate(child[0],Value.offspring_mutation_prob):
+		child[0].calculateFitness()
+	if mutate(child[1],Value.offspring_mutation_prob):	
+		child[1].calculateFitness()
 	return child
 	
 
 def algorithm():
 	init_pop()
+	#displayTT(_population[0])
 	showFitness()
-	for i in range(60):
-		#showFitness()
+	for i in range(800):
+		#mutation in current population
+		m=random.randint(0,len(_population)-1)
+		if mutate(_population[m],Value.population_mutation_prob):
+			_population[m].calculateFitness()
+
+		showFitness()
 		#kill unfit
 		killUnfit(_max_pop//2)
 		#populate
@@ -252,6 +280,7 @@ def algorithm():
 			_population.append(child[0])
 			_population.append(child[1])
 	showFitness()
+	#displayTT(_population[0])
 
 initialise()
 algorithm()

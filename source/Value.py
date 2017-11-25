@@ -11,5 +11,6 @@ no_of_groups=9
 working_days=5
 working_hours=11
 crossover_points=5
-mutation_prob=0.1
+population_mutation_prob=0.7
+offspring_mutation_prob=0.2
 mutation_size=5
