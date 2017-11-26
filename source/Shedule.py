@@ -71,23 +71,23 @@ def displayTT(t,g):	#tt for a gievn group
 class TimeTable:
 
 	def __init__(self):
-		self.best_chromo=[]
+		self.fit_chromo=[]
 		self.unfit_chromo=[]
 		self.table= [[[] for x in range(Value.no_of_groups)] for y in range(Value.working_days*Value.working_hours)]
 		self.fitness=-1
 	
 	#index of class in list
-	def posInBest(self,static_pos):
-		for i in range(len(self.best_chromo)):
-			if static_pos==self.best_chromo[i][0]:
+	def posInFit(self,static_pos):
+		for i in range(len(self.fit_chromo)):
+			if static_pos==self.fit_chromo[i][0]:
 				return i
 		return -1
 
 	#return timing of the class
-	def timeInBest(self,static_pos):
-		for i in range(len(self.best_chromo)):
-			if static_pos==self.best_chromo[i][0]:
-				return self.best_chromo[i][1].time
+	def timeInFit(self,static_pos):
+		for i in range(len(self.fit_chromo)):
+			if static_pos==self.fit_chromo[i][0]:
+				return self.fit_chromo[i][1].time
 		return -1
 
 	#index of class in list
@@ -103,6 +103,22 @@ class TimeTable:
 			if static_pos==self.unfit_chromo[i][0]:
 				return self.unfit_chromo[i][1].time
 		return -1
+	def getUnfitMutSize(self):
+		if Value.unfit_mutation_size<len(self.unfit_chromo):
+			return Value.unfit_mutation_size
+		return random.randint(0,len(self.unfit_chromo)+1)
+
+	def getFitMutSize(self):
+		if Value.fit_mutation_size<len(self.fit_chromo):
+			return Value.fit_mutation_size
+		return random.randint(0,len(self.fit_chromo)+1)
+
+	def isFitTiming(self,c,time):
+		for g in c[1].group:
+			for d in range(0,c[1].duration):
+				if len(self.table[time+d][int(g)-1])==1:
+					return False
+		return True
 
 	def delClass(self,static_pos):
 		i=self.posInUnfit(static_pos)
@@ -113,13 +129,13 @@ class TimeTable:
 					self.table[c[1].time+d][int(g)-1].remove(c)
 			del(self.unfit_chromo[i])
 			return
-		i=posInBest(static_pos)
+		i=posInFit(static_pos)
 		if i>=0:
-			c=self.best_chromo[i]
+			c=self.fit_chromo[i]
 			for d in range(c[1].duration):
 				for g in c[1].group:
 					self.table[c[1].time+d][int(g)-1].remove(c)
-			del(self.best_chromo[i])
+			del(self.fit_chromo[i])
 			return
 
 	def insertClass(self,c):
@@ -185,27 +201,27 @@ def crossover(parent1,parent2):
 	child.append(TimeTable())
 	for i in range(len(_class)):
 		#*check if pos1 and pos2 does not fall in regions of best chromosomes*
-		pos1=parent1.posInBest(i)
-		pos2=parent2.posInBest(i)
+		pos1=parent1.posInFit(i)
+		pos2=parent2.posInFit(i)
 		if pos1>=0 and pos2>=0:
 			if random.randint(1,2)==1:
-				c1=deepcopy(parent1.best_chromo[pos1])
-				c2=deepcopy(parent2.best_chromo[pos2])
+				c1=deepcopy(parent1.fit_chromo[pos1])
+				c2=deepcopy(parent2.fit_chromo[pos2])
 				child[0].insertClass(c1)
 				child[1].insertClass(c2)
 			else:
-				c1=deepcopy(parent1.best_chromo[pos1])
-				c2=deepcopy(parent2.best_chromo[pos2])
+				c1=deepcopy(parent1.fit_chromo[pos1])
+				c2=deepcopy(parent2.fit_chromo[pos2])
 				child[0].insertClass(c2)
 				child[1].insertClass(c1)
 
 		elif pos1>=0:
-			c1=deepcopy(parent1.best_chromo[pos1])
+			c1=deepcopy(parent1.fit_chromo[pos1])
 			c2=deepcopy(c1)
 			child[0].insertClass(c1)
 			child[1].insertClass(c2)
 		elif pos2>=0:
-			c1=deepcopy(parent2.best_chromo[pos2])
+			c1=deepcopy(parent2.fit_chromo[pos2])
 			c2=deepcopy(c1)
 			child[0].insertClass(c1)
 			child[1].insertClass(c2)
@@ -229,17 +245,36 @@ def crossover(parent1,parent2):
 #*affects positioning of chromosomes, deletes from middle inserts at the end*
 def mutate(child,prob):
 	if(random.random()<prob):
-		mut_genes=random.sample(range(0, len(child.unfit_chromo)), Value.mutation_size)
+		#unfit classes
+		mut_genes=random.sample(range(0, len(child.unfit_chromo)), child.getUnfitMutSize())
 		for i in mut_genes:
 			tc=child.unfit_chromo[i]
 			c=deepcopy(tc)
-			#*check if pos1 and pos2 does not fall in regions of best chromosomes*
-			c[1].time=random.randint(0,len(child.table)-tc[1].duration)
 			child.delClass(tc[0])
+			#check if new time does not fall in regions of best chromosomes
+			trails=0
+			time=random.randint(0,len(child.table)-c[1].duration)
+			while trails<Value.max_trials_for_free_slots and not child.isFitTiming(c,time):
+				time=random.randint(0,len(child.table)-c[1].duration)
+				trails=trails+1
+			c[1].time=time
 			child.insertClass(c)
+		#fit classes
+		'''mut_genes=random.sample(range(0, len(child.fit_chromo)), child.getFitMutSize())
+		for i in mut_genes:
+			tc=child.fit_chromo[i]
+			c=deepcopy(tc)
+			child.delClass(tc[0])
+			#check if new time does not fall in regions of best chromosomes
+			trails=0
+			time=random.randint(0,len(child.table)-c[1].duration)
+			while trails<Value.max_trials_for_free_slots and not child.isFitTiming(c,time):
+				time=random.randint(0,len(child.table)-c[1].duration)
+				trails=trails+1
+			c[1].time=time
+			child.insertClass(c)'''
 		return True
 	return False
-		
 
 def reproduce(parent1,parent2):
 	child=crossover(parent1,parent2)
@@ -257,13 +292,14 @@ def algorithm():
 	init_pop()
 	#displayTT(_population[0])
 	showFitness()
-	for i in range(800):
+	i=0
+	while i<1000 and _population[0].fitness<_max_fitness:
 		#mutation in current population
 		m=random.randint(0,len(_population)-1)
 		if mutate(_population[m],Value.population_mutation_prob):
 			_population[m].calculateFitness()
 
-		showFitness()
+		#showFitness()
 		#kill unfit
 		killUnfit(_max_pop//2)
 		#populate
@@ -279,7 +315,9 @@ def algorithm():
 			#add to population
 			_population.append(child[0])
 			_population.append(child[1])
+		i=i+1
 	showFitness()
+	print("Iterations required = "+str(i))
 	#displayTT(_population[0])
 
 initialise()

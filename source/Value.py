@@ -10,7 +10,12 @@ no_of_groups=9
 
 working_days=5
 working_hours=11
+
 crossover_points=5
+
 population_mutation_prob=0.7
 offspring_mutation_prob=0.2
-mutation_size=5
+max_trials_for_free_slots=10
+
+unfit_mutation_size=5
+fit_mutation_size=1
