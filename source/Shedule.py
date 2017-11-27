@@ -4,6 +4,7 @@ from Value import *
 from Group import *
 from Subject import *
 from CourseClass import *
+from numpy.random import choice
 
 _population=[]
 _subject=[]
@@ -18,6 +19,7 @@ def getDuration(s):
 			return _subject[i][2]
 	return -1
 
+#no of slots of a given class
 def getSlots(s):
 	for i in range(len(_subject)):
 		if _subject[i][0]==s:
@@ -50,23 +52,26 @@ def initialise():	#read input data in program
 	_max_fitness=len(_class)
 	print("Total Classes : "+str(len(_class)))
 
-def displayTT(t,g):	#tt for a gievn group
+def displayTT(t,g):	#tt for a given group
 	index=1
 	for i in range(len(t.table)):
-		print("\n"+str(index)+" : ", end=' ')
+		print(str(index)+" : ",end='')
 		for j in range(len(t.table[i][g-1])):
 			print(t.table[i][g-1][j][1].subject,end=' ,')
 		index=index+1
+		print('')
+	print('')
 
-'''def displayTT(t):	#tt for a gievn group
-	index=1
-	for i in range(len(t.table)):
-		print("\n"+str(index)+" : ", end=' ')
-		for g in range(1,4):
-			print("\t",end=' ')
-			for j in range(len(t.table[i][g-1])):
-				print("  |  "+t.table[i][g-1][j][1].subject,end=' ,')
-		index=index+1'''
+def writeToCSV(t,g,file_name):
+	f = open(file_name,'w')
+	f.write("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,\n")
+	for hr in range(Value.working_hours):
+		for day in range(Value.working_days):
+			for c in range(len(t.table[hr+Value.working_hours*day][g-1])):
+				f.write(t.table[hr+Value.working_hours*day][g-1][c][1].subject+"+")
+			f.write(',')
+		f.write('\n')
+	f.close()
 
 class TimeTable:
 
@@ -113,12 +118,52 @@ class TimeTable:
 			return Value.fit_mutation_size
 		return random.randint(0,len(self.fit_chromo)+1)
 
+	#checks if a given time falls in regions of already fit classes
 	def isFitTiming(self,c,time):
 		for g in c[1].group:
 			for d in range(0,c[1].duration):
 				if len(self.table[time+d][int(g)-1])==1:
 					return False
 		return True
+
+	#handles breaks(12:00pm ,2:00 pm) and class slot probabilities
+	def getPreferableSlot(self,c):
+		#limits boundary condition
+		class_type=c[1].subject[len(c[1].subject)-1]
+		max_time_slot=Value.working_hours-c[1].duration
+		slots=range(0,Value.working_hours)
+		prob=[]
+		if class_type=='L':
+			prob=Value.lec_slot_prob
+		elif c[1].subject[len(c[1].subject)-1]=='P':
+			prob=Value.prac_slot_prob
+		elif c[1].subject[len(c[1].subject)-1]=='T':
+			prob=Value.lec_slot_prob
+		#handles lecture,tuts,practicals slots
+		time=-1
+		if class_type=='L':
+			while time<0:
+				time=int(choice(slots,1,p=prob))	#choice() does not return an integer????
+				for d in range(c[1].duration):
+					#class should not fall in regins of zero probabilities
+					if prob[time+d]<=0 or time>max_time_slot:
+						time=-1
+						break
+		elif class_type=='P':
+			while time<0:
+				time=int(choice(slots,1,p=prob))
+				for d in range(c[1].duration):
+					if prob[time+d]<=0 or time>max_time_slot:
+						time=-1
+						break		
+		elif class_type=='T':
+			while time<0:
+				time=int(choice(slots,1,p=prob))
+				for d in range(c[1].duration):
+					if prob[time+d]<=0 or time>max_time_slot:
+						time=-1
+						break		
+		return random.randint(0,Value.working_days-1)*Value.working_hours+time
 
 	def delClass(self,static_pos):
 		i=self.posInUnfit(static_pos)
@@ -162,7 +207,7 @@ class TimeTable:
 		for rc in _class:
 			t_subject=rc.subject
 			t_group=rc.group
-			t_time=random.randint(0,len(self.table)-rc.duration)
+			t_time=self.getPreferableSlot([i,rc])
 			t_teacher="XYZ"
 			t_room="XYZ"
 			t_duration=rc.duration
@@ -184,6 +229,7 @@ def showFitness():
 		flist.append(p.fitness)
 	list.sort(flist,reverse=True)
 	#fitness of best time-table
+	print("Fitness = ",end=' ')
 	print("{0:.2f}".format((flist[0]*100)/_max_fitness),end=" , ")
 	#average fitness
 	print("{0:.2f}".format(((sum(flist)/len(flist))*100)/_max_fitness))
@@ -253,9 +299,9 @@ def mutate(child,prob):
 			child.delClass(tc[0])
 			#check if new time does not fall in regions of best chromosomes
 			trails=0
-			time=random.randint(0,len(child.table)-c[1].duration)
+			time=child.getPreferableSlot(c)
 			while trails<Value.max_trials_for_free_slots and not child.isFitTiming(c,time):
-				time=random.randint(0,len(child.table)-c[1].duration)
+				time=child.getPreferableSlot(c)
 				trails=trails+1
 			c[1].time=time
 			child.insertClass(c)
@@ -290,7 +336,8 @@ def reproduce(parent1,parent2):
 
 def algorithm():
 	init_pop()
-	#displayTT(_population[0])
+	writeToCSV(_population[0],4,"initial.csv")
+	displayTT(_population[0],4)
 	showFitness()
 	i=0
 	while i<1000 and _population[0].fitness<_max_fitness:
@@ -316,12 +363,10 @@ def algorithm():
 			_population.append(child[0])
 			_population.append(child[1])
 		i=i+1
-	showFitness()
+	writeToCSV(_population[0],4,"final.csv")
+	displayTT(_population[0],4)
+	showFitness()	
 	print("Iterations required = "+str(i))
-	#displayTT(_population[0])
 
 initialise()
 algorithm()
-
-
-#displayTT(population[0])
