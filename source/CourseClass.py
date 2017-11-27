@@ -1,16 +1,17 @@
 #represents a class(L/T/P)
 import Value
 class CourseClass:
-	def __init__(self,subject="XYZ",groups=[],teacher="XYZ",room="XYZ",duration=1,lab=False):
+	def __init__(self,subject="XYZ",group=[],time=-1,teacher="XYZ",room="XYZ",duration=1,lab=False):
 		self.subject=subject
-		self.groups=groups
+		self.group=group
+		self.time=time
 		self.teacher=teacher
 		self.room=room
 		self.duration=duration
 		self.lab=lab
 	def display(self):
 		print("subject = ",self.subject,\
-			"\ngroups = ",self.groups,\
+			"\ngroup = ",self.group,\
 			"\nteacher = ",self.teacher,\
 			"\nroom = ",self.room,\
 			"\nduration = ",self.duration,\
@@ -23,7 +24,7 @@ class CourseClass:
 		l=inp.split("\n")
 		#print(len(l))
 		del(l[0])	#ignore first line
-		del(l[len(l)-1])	#ignore first line
+		del(l[len(l)-1])	#ignore last line
 		#print(len(l))
 		for i in range(len(l)):
 			l[i]=l[i].split(",")
