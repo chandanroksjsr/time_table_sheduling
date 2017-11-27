@@ -5,7 +5,7 @@ from Group import *
 from Subject import *
 from CourseClass import *
 from numpy.random import choice
-
+from Teachers import *
 _population=[]
 _subject=[]
 _group=[]
@@ -54,10 +54,13 @@ def initialise():	#read input data in program
 
 def displayTT(t,g):	#tt for a given group
 	index=1
-	for i in range(len(t.table)):
+	for i in range(7):
 		print(str(index)+" : ",end='')
 		for j in range(len(t.table[i][g-1])):
-			print(t.table[i][g-1][j][1].subject,end=' ,')
+			# if t.table[i][g-1][] is None:
+			# 	print("KHLI")
+			# else:
+				print(t.table[i][g-1][j][1].group+ "  "+t.table[i][g-1][1].teacher,end=' ,')
 		index=index+1
 		print('')
 	print('')
@@ -336,9 +339,9 @@ def reproduce(parent1,parent2):
 
 def algorithm():
 	init_pop()
-	writeToCSV(_population[0],4,"initial.csv")
-	displayTT(_population[0],4)
-	showFitness()
+	# writeToCSV(_population[0],4,"initial.csv")
+	# displayTT(_population[0],4)
+	# showFitness()
 	i=0
 	while i<1000 and _population[0].fitness<_max_fitness:
 		#mutation in current population
@@ -363,10 +366,14 @@ def algorithm():
 			_population.append(child[0])
 			_population.append(child[1])
 		i=i+1
-	writeToCSV(_population[0],4,"final.csv")
+	# Teachers.allotTeacher(t.table)
+	# writeToCSV(_population[0],4,"final.csv")
 	displayTT(_population[0],4)
 	showFitness()	
 	print("Iterations required = "+str(i))
 
 initialise()
 algorithm()
+# for i in _class:
+# 	print( i.subject ,end=' ')
+# 	print( i.group )

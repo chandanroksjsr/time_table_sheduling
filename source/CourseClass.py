@@ -17,7 +17,7 @@ class CourseClass:
 			"\nduration = ",self.duration,\
 			"\nlab = ",self.lab,\
 			"\n")
-	def read():
+	def read(self):
 		f=open(Value.classes_filename,"r")
 		inp=f.read()
 		#print(type(inp))
@@ -31,7 +31,9 @@ class CourseClass:
 			l[i][1]=l[i][1].split("=")
 			for j in range(len(l[i][1])):
 				l[i][1][j]=l[i][1][j].split(":")
+		# print("read done")
 		return l
 
-#c1=CourseClass("UCS406 L",[1,2,3],"RKS","F102","1",False)
-#c1.display()
+c1=CourseClass("UCS406 L",[1,2,3],"RKS","F102","1",False)
+c1.display()
+c1.read()
