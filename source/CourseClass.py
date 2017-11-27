@@ -17,7 +17,7 @@ class CourseClass:
 			"\nduration = ",self.duration,\
 			"\nlab = ",self.lab,\
 			"\n")
-	def read(self):
+	def read():
 		f=open(Value.classes_filename,"r")
 		inp=f.read()
 		#print(type(inp))
@@ -34,6 +34,6 @@ class CourseClass:
 		# print("read done")
 		return l
 
-c1=CourseClass("UCS406 L",[1,2,3],"RKS","F102","1",False)
-c1.display()
-c1.read()
+# c1=CourseClass("UCS406 L",[1,2,3],"RKS","F102","1",False)
+# c1.display()
+# c1.read()

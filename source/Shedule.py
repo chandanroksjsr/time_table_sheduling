@@ -41,6 +41,20 @@ def initialise():	#read input data in program
 	_subject=Subject.read()
 	_group=Group.read()
 	temp=CourseClass.read()
+	# f=open(Value.classes_filename,"r")
+	# inp=f.read()
+	# #print(type(inp))
+	# l=inp.split("\n")
+	# #print(len(l))
+	# del(l[0])	#ignore first line
+	# del(l[len(l)-1])	#ignore last line
+	# #print(len(l))
+	# for i in range(len(l)):
+	# 	l[i]=l[i].split(",")
+	# 	l[i][1]=l[i][1].split("=")
+	# 	for j in range(len(l[i][1])):
+	# 		l[i][1][j]=l[i][1][j].split(":")
+	# temp = l
 	for i in range(len(temp)):	#raw class data from .csv file
 		rc=temp[i]	#raw class
 		d=getDuration(rc[0])
@@ -54,13 +68,14 @@ def initialise():	#read input data in program
 
 def displayTT(t,g):	#tt for a given group
 	index=1
-	for i in range(7):
+	for i in range(len(t.table)):
 		print(str(index)+" : ",end='')
 		for j in range(len(t.table[i][g-1])):
 			# if t.table[i][g-1][] is None:
 			# 	print("KHLI")
 			# else:
-				print(t.table[i][g-1][j][1].group+ "  "+t.table[i][g-1][1].teacher,end=' ,')
+				print(t.table[i][g-1][j][1].subject,end=' ,')
+				print(t.table[i][g-1][j][1].teacher,end=' ,')
 		index=index+1
 		print('')
 	print('')
@@ -366,7 +381,8 @@ def algorithm():
 			_population.append(child[0])
 			_population.append(child[1])
 		i=i+1
-	# Teachers.allotTeacher(t.table)
+	# displayTT(_population[0],1)
+	Teachers.allotTeacher(_population[0].table)
 	# writeToCSV(_population[0],4,"final.csv")
 	displayTT(_population[0],4)
 	showFitness()	
