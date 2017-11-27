@@ -89,9 +89,6 @@ class Teacher:
 						alt[g][sub]=tchr
 					_teachers[tchr][i]=1
 		# return table
-	def readCour():
-		l=CourseClass.read()
-		return l
 
 
 # Teacher.initSlot()
