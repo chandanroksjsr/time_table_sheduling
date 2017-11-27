@@ -1,7 +1,7 @@
 data_path="../data/"
 subjects_filename=data_path+"subjects.csv"
 groups_filename=data_path+"groups.csv"
-teachers_filename=data_path+"teachers.csv"
+teachers_filename=data_path+"sub_teachers.csv"
 rooms_filename=data_path+"rooms.csv"
 classes_filename=data_path+"classes.csv"
 
