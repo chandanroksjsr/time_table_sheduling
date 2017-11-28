@@ -41,20 +41,6 @@ def initialise():	#read input data in program
 	_subject=Subject.read()
 	_group=Group.read()
 	temp=CourseClass.read()
-	# f=open(Value.classes_filename,"r")
-	# inp=f.read()
-	# #print(type(inp))
-	# l=inp.split("\n")
-	# #print(len(l))
-	# del(l[0])	#ignore first line
-	# del(l[len(l)-1])	#ignore last line
-	# #print(len(l))
-	# for i in range(len(l)):
-	# 	l[i]=l[i].split(",")
-	# 	l[i][1]=l[i][1].split("=")
-	# 	for j in range(len(l[i][1])):
-	# 		l[i][1][j]=l[i][1][j].split(":")
-	# temp = l
 	for i in range(len(temp)):	#raw class data from .csv file
 		rc=temp[i]	#raw class
 		d=getDuration(rc[0])
@@ -76,9 +62,30 @@ def displayTT(t,g):	#tt for a given group
 			# else:
 				print(t.table[i][g-1][j][1].subject,end=' ,')
 				print(t.table[i][g-1][j][1].teacher,end=' ,')
+				print(t.table[i][g-1][j][1].frm,end=' ,')
+				print(t.table[i][g-1][j][1].group)
 		index=index+1
 		print('')
 	print('')
+
+def displayTTComp(t):	#tt for a given group
+	index=1
+	for g in range(9):
+		print(g+1,end="\n\n")
+		index = 1
+		for i in range(len(t.table)):
+			print(str(index)+" : ",end='')
+			for j in range(len(t.table[i][g-1])):
+				# if t.table[i][g-1][] is None:
+				# 	print("KHLI")
+				# else:
+					print(t.table[i][g-1][j][1].subject,end=' ,')
+					print(t.table[i][g-1][j][1].teacher,end=' ,')
+					print(t.table[i][g-1][j][1].frm,end=' ,')
+					print(t.table[i][g-1][j][1].group)
+			index=index+1
+			print('')
+		print('')
 
 def writeToCSV(t,g,file_name):
 	f = open(file_name,'w')
@@ -353,6 +360,7 @@ def reproduce(parent1,parent2):
 	
 
 def algorithm():
+	initialise()
 	init_pop()
 	# writeToCSV(_population[0],4,"initial.csv")
 	# displayTT(_population[0],4)
@@ -382,14 +390,15 @@ def algorithm():
 			_population.append(child[1])
 		i=i+1
 	# displayTT(_population[0],1)
-	Teachers.allotTeacher(_population[0].table)
+	# Teachers.allotTeacher(_population[0].table)
 	# writeToCSV(_population[0],4,"final.csv")
-	displayTT(_population[0],4)
-	showFitness()	
+	# displayTT(_population[0],5)
+	# displayTTComp(_population[0])
+	# showFitness()	
 	print("Iterations required = "+str(i))
-
-initialise()
-algorithm()
+	return (_population[0])
+# initialise()
+# algorithm()
 # for i in _class:
 # 	print( i.subject ,end=' ')
 # 	print( i.group )

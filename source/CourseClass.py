@@ -1,7 +1,7 @@
 #represents a class(L/T/P)
 import Value
 class CourseClass:
-	def __init__(self,subject="XYZ",group=[],time=-1,teacher="XYZ",room="XYZ",duration=1,lab=False):
+	def __init__(self,subject="XYZ",group=[],time=-1,teacher="XYZ",room="XYZ",duration=1,lab=False,frm = -1,sett = False):
 		self.subject=subject
 		self.group=group
 		self.time=time
@@ -9,6 +9,8 @@ class CourseClass:
 		self.room=room
 		self.duration=duration
 		self.lab=lab
+		self.frm = frm
+		self.set = sett
 	def display(self):
 		print("subject = ",self.subject,\
 			"\ngroup = ",self.group,\
