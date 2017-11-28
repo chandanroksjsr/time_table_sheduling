@@ -63,10 +63,11 @@ def dispTeachers():
 		print(str(i) +"  ",end="  ")
 		print( _teachers[i],end="\n\n" )
 
-def allot(table):
+def allotTeacher(t):
 	global _teachers
 	global _subTeach
 	initSlot()
+	table = t.table
 	# print("SUBSS:  ")
 	# printSub()
 	# print("TEACHERSS\n\n")
@@ -74,7 +75,7 @@ def allot(table):
 	try:
 		for grp in range(Value.no_of_groups):
 			for i in range(len(table)):
-				print(i,"    ",grp)
+				# print(i,"    ",grp)
 				if len(table[i][grp])>0:
 					clss = table[i][grp][0][1]
 					if isClass(clss) and not clss.set :
@@ -94,13 +95,15 @@ def allot(table):
 													table[rep+d][grp+g][0][1].teacher = tchr
 													table[rep+d][grp+g][0][1].set  = True
 													table[rep+d][grp+g][0][1].frm  = grp+1
+		return t
 
 	except :
-		displayTT(tableT,1)
+		print("Error")
+		# displayTTComp(t)
 
-tableT  = algorithm()
-allot(tableT.table)
-# printSub()
-displayTT(tableT,5)
+# tableT  = algorithm()
+# allotTeacher(tableT)
+# # printSub()
+# displayTT(tableT,5)
 
 

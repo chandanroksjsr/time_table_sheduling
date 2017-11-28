@@ -6,6 +6,7 @@ from Subject import *
 from CourseClass import *
 from numpy.random import choice
 from Teachers import *
+
 _population=[]
 _subject=[]
 _group=[]
@@ -63,12 +64,12 @@ def displayTT(t,g):	#tt for a given group
 				print(t.table[i][g-1][j][1].subject,end=' ,')
 				print(t.table[i][g-1][j][1].teacher,end=' ,')
 				print(t.table[i][g-1][j][1].frm,end=' ,')
-				print(t.table[i][g-1][j][1].group)
+				print(t.table[i][g-1][j][1].room)
 		index=index+1
 		print('')
 	print('')
 
-<<<<<<< HEAD
+# <<<<<<< HEAD
 def displayTTComp(t):	#tt for a given group
 	index=1
 	for g in range(9):
@@ -83,15 +84,15 @@ def displayTTComp(t):	#tt for a given group
 					print(t.table[i][g-1][j][1].subject,end=' ,')
 					print(t.table[i][g-1][j][1].teacher,end=' ,')
 					print(t.table[i][g-1][j][1].frm,end=' ,')
-					print(t.table[i][g-1][j][1].group)
+					print(t.table[i][g-1][j][1].room)
 			index=index+1
 			print('')
 		print('')
 
-def writeToCSV(t,g,file_name):
-=======
+# def writeToCSV(t,g,file_name):
+# =======
 def writeToCSV(t,file_name):
->>>>>>> refs/remotes/origin/master
+# >>>>>>> refs/remotes/origin/master
 	f = open(file_name,'w')
 	for g in range(1,len(t.table[0])+1):
 		f.write("Group_"+str(g)+"\n")
@@ -176,6 +177,7 @@ class TimeTable:
 			prob=Value.lec_slot_prob
 		elif c[1].subject[len(c[1].subject)-1]=='P':
 			prob=Value.prac_slot_prob
+			c[1].lab = True
 		elif c[1].subject[len(c[1].subject)-1]=='T':
 			prob=Value.lec_slot_prob
 		#handles lecture,tuts,practicals slots
@@ -376,15 +378,15 @@ def reproduce(parent1,parent2):
 def algorithm():
 	initialise()
 	init_pop()
-<<<<<<< HEAD
+# <<<<<<< HEAD
 	# writeToCSV(_population[0],4,"initial.csv")
 	# displayTT(_population[0],4)
 	# showFitness()
-=======
+# =======
 	#writeToCSV(_population[0],"initial.csv")
 	#displayTT(_population[0],4)
 	showFitness()
->>>>>>> refs/remotes/origin/master
+# >>>>>>> refs/remotes/origin/master
 	i=0
 	while i<1000 and _population[0].fitness<_max_fitness:
 		#mutation in current population
@@ -409,7 +411,7 @@ def algorithm():
 			_population.append(child[0])
 			_population.append(child[1])
 		i=i+1
-<<<<<<< HEAD
+# <<<<<<< HEAD
 	# displayTT(_population[0],1)
 	# Teachers.allotTeacher(_population[0].table)
 	# writeToCSV(_population[0],4,"final.csv")
@@ -423,13 +425,13 @@ def algorithm():
 # for i in _class:
 # 	print( i.subject ,end=' ')
 # 	print( i.group )
-=======
+# =======
 	#displayTT(_population[0],4)
 	showFitness()	
 	print("Iterations required = "+str(i))
 	#return _population[0]
 
-initialise()
-algorithm()
-writeToCSV(_population[0],"final.csv")
->>>>>>> refs/remotes/origin/master
+# initialise()
+# algorithm()
+# writeToCSV(_population[0],"final.csv")
+# >>>>>>> refs/remotes/origin/master

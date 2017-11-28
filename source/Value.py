@@ -2,7 +2,8 @@ data_path="../data/"
 subjects_filename=data_path+"subjects.csv"
 groups_filename=data_path+"groups.csv"
 teachers_filename=data_path+"sub_teachers.csv"
-rooms_filename=data_path+"rooms.csv"
+rooms_filename=data_path+"allot_room.csv"
+labs_filename=data_path+"allot_lab.csv"
 classes_filename=data_path+"classes.csv"
 
 max_pop=16

@@ -1,7 +1,7 @@
 #represents a class(L/T/P)
 import Value
 class CourseClass:
-	def __init__(self,subject="XYZ",group=[],time=-1,teacher="XYZ",room="XYZ",duration=1,lab=False,frm = -1,sett = False):
+	def __init__(self,subject="XYZ",group=[],time=-1,teacher="XYZ",room="XYZ",duration=1,lab=False,frm = -1,sett = False,rset = None):
 		self.subject=subject
 		self.group=group
 		self.time=time
@@ -11,6 +11,7 @@ class CourseClass:
 		self.lab=lab
 		self.frm = frm
 		self.set = sett
+		self.rset = rset 		# To tell is room is alloted or not
 	def display(self):
 		print("subject = ",self.subject,\
 			"\ngroup = ",self.group,\
