@@ -68,6 +68,7 @@ def displayTT(t,g):	#tt for a given group
 		print('')
 	print('')
 
+<<<<<<< HEAD
 def displayTTComp(t):	#tt for a given group
 	index=1
 	for g in range(9):
@@ -88,13 +89,26 @@ def displayTTComp(t):	#tt for a given group
 		print('')
 
 def writeToCSV(t,g,file_name):
+=======
+def writeToCSV(t,file_name):
+>>>>>>> refs/remotes/origin/master
 	f = open(file_name,'w')
-	f.write("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,\n")
-	for hr in range(Value.working_hours):
-		for day in range(Value.working_days):
-			for c in range(len(t.table[hr+Value.working_hours*day][g-1])):
-				f.write(t.table[hr+Value.working_hours*day][g-1][c][1].subject+"+")
-			f.write(',')
+	for g in range(1,len(t.table[0])+1):
+		f.write("Group_"+str(g)+"\n")
+		f.write("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,\n")
+		for hr in range(Value.working_hours):
+			for day in range(Value.working_days):
+				f.write("\"")
+				flag=0
+				for c in range(len(t.table[hr+Value.working_hours*day][g-1])):
+					flag=1
+					f.write(t.table[hr+Value.working_hours*day][g-1][c][1].subject)
+				if flag:
+					f.write("\n"+t.table[hr+Value.working_hours*day][g-1][c][1].room)
+					f.write("          "+t.table[hr+Value.working_hours*day][g-1][c][1].teacher)
+				f.write("\"")
+				f.write(',')
+			f.write('\n')
 		f.write('\n')
 	f.close()
 
@@ -362,9 +376,15 @@ def reproduce(parent1,parent2):
 def algorithm():
 	initialise()
 	init_pop()
+<<<<<<< HEAD
 	# writeToCSV(_population[0],4,"initial.csv")
 	# displayTT(_population[0],4)
 	# showFitness()
+=======
+	#writeToCSV(_population[0],"initial.csv")
+	#displayTT(_population[0],4)
+	showFitness()
+>>>>>>> refs/remotes/origin/master
 	i=0
 	while i<1000 and _population[0].fitness<_max_fitness:
 		#mutation in current population
@@ -389,6 +409,7 @@ def algorithm():
 			_population.append(child[0])
 			_population.append(child[1])
 		i=i+1
+<<<<<<< HEAD
 	# displayTT(_population[0],1)
 	# Teachers.allotTeacher(_population[0].table)
 	# writeToCSV(_population[0],4,"final.csv")
@@ -402,3 +423,13 @@ def algorithm():
 # for i in _class:
 # 	print( i.subject ,end=' ')
 # 	print( i.group )
+=======
+	#displayTT(_population[0],4)
+	showFitness()	
+	print("Iterations required = "+str(i))
+	#return _population[0]
+
+initialise()
+algorithm()
+writeToCSV(_population[0],"final.csv")
+>>>>>>> refs/remotes/origin/master
