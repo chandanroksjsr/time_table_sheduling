@@ -271,9 +271,9 @@ def showFitness():
 	list.sort(flist,reverse=True)
 	#fitness of best time-table
 	print("Fitness = ",end=' ')
-	print("{0:.2f}".format((flist[0]*100)/_max_fitness),end=" , ")
+	print("{0:.2f}".format((flist[0]*100)/_max_fitness))#,end=" , ")
 	#average fitness
-	print("{0:.2f}".format(((sum(flist)/len(flist))*100)/_max_fitness))
+	# print("{0:.2f}".format(((sum(flist)/len(flist))*100)/_max_fitness))
 
 #kills most unfit l individuals from current population
 def killUnfit(l):
@@ -376,8 +376,13 @@ def reproduce(parent1,parent2):
 	
 
 def algorithm():
+	print("   Creating Initial Population\n")
 	initialise()
 	init_pop()
+
+	print("    Initial Population Created\n   Best Fitness So Far : ",end =' ')
+	showFitness()
+	print("    Now Performing Genetic Algorithm\n")
 # <<<<<<< HEAD
 	# writeToCSV(_population[0],4,"initial.csv")
 	# displayTT(_population[0],4)
@@ -385,7 +390,7 @@ def algorithm():
 # =======
 	#writeToCSV(_population[0],"initial.csv")
 	#displayTT(_population[0],4)
-	showFitness()
+	# showFitness()
 # >>>>>>> refs/remotes/origin/master
 	i=0
 	while i<1000 and _population[0].fitness<_max_fitness:
@@ -417,8 +422,9 @@ def algorithm():
 	# writeToCSV(_population[0],4,"final.csv")
 	# displayTT(_population[0],5)
 	# displayTTComp(_population[0])
-	# showFitness()	
-	print("Iterations required = "+str(i))
+	print("   Best ",end='  ')
+	showFitness()	
+	print("  Iterations required = "+str(i),end='\n\n')
 	return (_population[0])
 # initialise()
 # algorithm()
@@ -426,9 +432,9 @@ def algorithm():
 # 	print( i.subject ,end=' ')
 # 	print( i.group )
 # =======
-	#displayTT(_population[0],4)
-	showFitness()	
-	print("Iterations required = "+str(i))
+	# #displayTT(_population[0],4)
+	# showFitness()	
+	# print("Iterations required = "+str(i))
 	#return _population[0]
 
 # initialise()

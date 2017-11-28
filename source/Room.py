@@ -48,7 +48,7 @@ def printLabs(labs):
 		print(i,"  ",labs[i])
 
 # print(readRoom())
-printRooms(initRoom())
-print("\n\nLABS \n\n")
-# print(readLab())
-printLabs(initLab())
+# printRooms(initRoom())
+# print("\n\nLABS \n\n")
+# # print(readLab())
+# printLabs(initLab())

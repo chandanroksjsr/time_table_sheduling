@@ -23,7 +23,7 @@ class Subject:
 			l[i]=l[i].split(",")
 			l[i][1]=int(l[i][1]);
 			l[i][2]=int(l[i][2]);
-		print("Read Subjects Done")
+		# print("Read Subjects Done")
 		return l
 
 #s1=Subject("UCS606 L",3,1)

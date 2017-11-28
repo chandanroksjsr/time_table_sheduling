@@ -39,7 +39,7 @@ def allotRoom(t):
 		room = getRoom()
 		lab = getLab()
 		for i in range(len(table)):
-			print(i,"    ",grp)
+			# print(i,"    ",grp)
 			if len(table[i][grp])>0:
 				clss = table[i][grp][0][1]
 				if isClass(clss) and not clss.rset :
@@ -83,11 +83,17 @@ def allotRoom(t):
 	# except :
 	# 	print()
 	# 	displayTT(t,0)
-
+print("  Starting ...\n")
 table = algorithm()
+print("   Time Slots Assigned\n\n Now Assigning Teachers\n")
 allotTeacher(table)
+print("   Teachers Assigned Successfully\n")
+print("   Now Assigning Rooms\n")
 allotRoom(table)
 
-displayTTComp(table )
+print("     Rooms Alloted\n\n \t\t Time Table Formation Completed\n")
 
-writeToCSV(table,"finalxxx.csv")
+# displayTTComp(table )
+
+writeToCSV(table,"finalx.csv")
+print("    Write Successful, Check CSV file for Time Table\n")
