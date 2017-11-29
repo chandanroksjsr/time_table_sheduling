@@ -59,12 +59,12 @@ class Teachers:
 			print(str(i) +"  ",end="  ")
 			print( _teachers[i],end="\n\n" )
 
-	def isAlloted(alt,grp,sub):
-
-		for i in alt[grp]:
-			if i == sub:
-				return True
-		return False
+#	def isAlloted(alt,grp,sub):
+#
+#		for i in alt[grp]:
+#			if i == sub:
+#				return True
+#		return False
 
 # 	def allotTeacher(table):				##  TimeTable from GA
 # 		global _teachers
