@@ -42,6 +42,8 @@ def allotRoom(t):
 			# print(i,"    ",grp)
 			if len(table[i][grp])>0:
 				clss = table[i][grp][0][1]
+				# if clss.set == False:
+				# 	allotTeacher(t)
 				if isClass(clss) and not clss.rset :
 					if clss.subject[len(clss.subject)-1]=='P':
 						clss.lab = True

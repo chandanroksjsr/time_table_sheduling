@@ -63,11 +63,18 @@ def dispTeachers():
 		print(str(i) +"  ",end="  ")
 		print( _teachers[i],end="\n\n" )
 
-def allotTeacher(t):
+
+# initSlot()
+
+
+def allotTeacher(t,c=0):
+
 	global _teachers
 	global _subTeach
-	initSlot()
 	table = t.table
+	
+	if c==0:
+		initSlot()
 	# Teachers.printSub(_subTeach)
 	# print("SUBSS:  ")
 	# printSub()
@@ -92,11 +99,11 @@ def allotTeacher(t):
 								for d in range(0,dur):
 									if (rep+d)<len(table):
 										if(_teachers[tchr][rep+d]!= 0):
-											print("CLASH")
+											# print("CLASH")
 											clss.set= False
 											clss.teacher = "XYZ"
 											clss.frm = -1
-											i=i-(d+1)
+											i=i-5#(d+1)
 											# print(tchr,_teachers[tchr])
 											for z in tUsed:
 												# print(rep+d," ",z,clss.lab)
@@ -105,7 +112,7 @@ def allotTeacher(t):
 												for g in range(len(grps)):
 													if (grp+g) <Value.no_of_groups:
 														if len(table[rep+d][grp+g])>0:
-															print("\t",rep+d,"   ",grp+g)
+															# print("\t",rep+d,"   ",grp+g)
 															table[int(z)][grp+g][0][1].teacher = 'XYY'
 															table[int(z)][grp+g][0][1].set  = False
 															table[int(z)][grp+g][0][1].frm  = -1
@@ -122,10 +129,20 @@ def allotTeacher(t):
 														table[rep+d][grp+g][0][1].frm  = grp+1
 											_teachers[tchr][rep+d]+=1
 											tUsed.append(rep+d)
-	Teachers.dispTeachers(_teachers)
+	# Teachers.dispTeachers(_teachers)
 	countClashed()
+	if not allSet(t) and c<10:
+		print(c)
+		return allotTeacher(t,c+1)
 	return t
-
+def allSet(t):
+	table = t.table
+	for grp in range(len(table[0])):
+		for i in range(len(table)):
+			if len(table[i][grp])>0:
+				if table[i][grp][0][1].set == False:
+					return False
+	return True
 def countClashed():
 	count = 0
 	tot = 0

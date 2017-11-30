@@ -63,7 +63,7 @@ def displayTT(t,g):	#tt for a given group
 			# else:
 				print(t.table[i][g-1][j][1].subject,end=' ,')
 				print(t.table[i][g-1][j][1].teacher,end=' ,')
-				print(t.table[i][g-1][j][1].frm,end=' ,')
+				print(t.table[i][g-1][j][1].set,end=' ,')
 				print(t.table[i][g-1][j][1].room)
 		index=index+1
 		print('')
@@ -83,7 +83,7 @@ def displayTTComp(t):	#tt for a given group
 				# else:
 					print(t.table[i][g-1][j][1].subject,end=' ,')
 					print(t.table[i][g-1][j][1].teacher,end=' ,')
-					print(t.table[i][g-1][j][1].frm,end=' ,')
+					print(t.table[i][g-1][j][1].set,end=' ,')
 					print(t.table[i][g-1][j][1].room)
 			index=index+1
 			print('')
