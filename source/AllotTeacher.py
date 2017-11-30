@@ -68,37 +68,79 @@ def allotTeacher(t):
 	global _subTeach
 	initSlot()
 	table = t.table
+	# Teachers.printSub(_subTeach)
 	# print("SUBSS:  ")
 	# printSub()
 	# print("TEACHERSS\n\n")
 	# dispTeachers()
-	try:
-		for grp in range(Value.no_of_groups):
-			for i in range(len(table)):
-				# print(i,"    ",grp)
-				if len(table[i][grp])>0:
-					clss = table[i][grp][0][1]
-					if isClass(clss) and not clss.set :
-						grps = clss.group
-						sub = clss.subject
-						tchr = getTeacher(sub)
-						# print(sub,"\tTeachers is : ",tchr)
-						dur = clss.duration
-						for rep in range(i,len(table)):
-							if len(table[rep][grp])>0:# and isClass(table[rep][grp][0][1]) :
-								if table[rep][grp][0][1].subject == sub:
-									for d in range(dur):
-										for g in range(len(grps)):
-											if (grp+g) <Value.no_of_groups and (rep+d)<len(table):
-												if len(table[rep+d][grp+g])>0:
-													# print("\t",rep+d,"   ",grp+g)
-													table[rep+d][grp+g][0][1].teacher = tchr
-													table[rep+d][grp+g][0][1].set  = True
-													table[rep+d][grp+g][0][1].frm  = grp+1
-		return t
+	# try:
+	for grp in range(Value.no_of_groups):
+		for i in range(len(table)):
+			# print(i,"    ",grp)
+			if len(table[i][grp])>0:
+				clss = table[i][grp][0][1]
+				if isClass(clss) and not clss.set :
+					tUsed = []
+					grps = clss.group
+					sub = clss.subject
+					tchr = getTeacher(sub)
+					# print(sub,"\tTeachers is : ",tchr)
+					dur = clss.duration
+					for rep in range(i,len(table)):
+						if len(table[rep][grp])>0:# and isClass(table[rep][grp][0][1]) :
+							if table[rep][grp][0][1].subject == sub:
+								for d in range(0,dur):
+									if (rep+d)<len(table):
+										if(_teachers[tchr][rep+d]!= 0):
+											print("CLASH")
+											clss.set= False
+											clss.teacher = "XYZ"
+											clss.frm = -1
+											i=i-(d+1)
+											# print(tchr,_teachers[tchr])
+											for z in tUsed:
+												# print(rep+d," ",z,clss.lab)
+												_teachers[tchr][int(z)]=0
+												# print(tchr,_teachers[tchr])
+												for g in range(len(grps)):
+													if (grp+g) <Value.no_of_groups:
+														if len(table[rep+d][grp+g])>0:
+															print("\t",rep+d,"   ",grp+g)
+															table[int(z)][grp+g][0][1].teacher = 'XYY'
+															table[int(z)][grp+g][0][1].set  = False
+															table[int(z)][grp+g][0][1].frm  = -1
+											tUsed = []
+											rep = 1000
+											break
+										else:
+											for g in range(len(grps)):
+												if (grp+g) <Value.no_of_groups:
+													if len(table[rep+d][grp+g])>0:
+														# print("\t",rep+d,"   ",grp+g)
+														table[rep+d][grp+g][0][1].teacher = tchr
+														table[rep+d][grp+g][0][1].set  = True
+														table[rep+d][grp+g][0][1].frm  = grp+1
+											_teachers[tchr][rep+d]+=1
+											tUsed.append(rep+d)
+	Teachers.dispTeachers(_teachers)
+	countClashed()
+	return t
 
-	except :
-		print("Error")
+def countClashed():
+	count = 0
+	tot = 0
+	global _teachers
+	for i in _teachers:
+		for j in _teachers[i]:
+			# print(j)
+			if j>1:
+				count+=1
+			if j==1:
+				tot+=1
+	print("\n\t\t\t COUNT : ",count)
+	print("\n\t\t\t TOTAL : ",tot)
+	# except :
+		# print("Error")
 		# displayTTComp(t)
 
 # tableT  = algorithm()

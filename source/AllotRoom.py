@@ -57,7 +57,7 @@ def allotRoom(t):
 									break
 						else:
 							cur = room
-						_roomD[cur][i]= 1
+						_roomD[cur][i]+= 1
 
 					if clss.lab :
 						if _labD[lab][i] == 1:
@@ -67,7 +67,7 @@ def allotRoom(t):
 									break		
 						else:
 							cur = lab
-						_labD[cur][i] = 1
+						_labD[cur][i] += 1
 
 					for d in range(dur):
 						for g in range(len(grps)):
@@ -93,7 +93,11 @@ allotRoom(table)
 
 print("     Rooms Alloted\n\n \t\t Time Table Formation Completed\n")
 
-# displayTTComp(table )
+displayTTComp(table )
 
 writeToCSV(table,"finalx.csv")
 print("    Write Successful, Check CSV file for Time Table\n")
+
+
+# Room.printRooms(_roomD)
+# Room.printLabs(_labD)

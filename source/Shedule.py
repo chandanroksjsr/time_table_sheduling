@@ -72,7 +72,7 @@ def displayTT(t,g):	#tt for a given group
 # <<<<<<< HEAD
 def displayTTComp(t):	#tt for a given group
 	index=1
-	for g in range(9):
+	for g in range(Value.no_of_groups):
 		print(g+1,end="\n\n")
 		index = 1
 		for i in range(len(t.table)):
@@ -94,8 +94,9 @@ def displayTTComp(t):	#tt for a given group
 def writeToCSV(t,file_name):
 # >>>>>>> refs/remotes/origin/master
 	f = open(file_name,'w')
+	# print("LENGTH:  ",len(t.table[0]))
 	for g in range(1,len(t.table[0])+1):
-		f.write("Group_"+str(g)+"\n")
+		f.write("\"Group_"+str(g)+"\n\"\n")
 		f.write("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,\n")
 		for hr in range(Value.working_hours):
 			for day in range(Value.working_days):
@@ -441,3 +442,4 @@ def algorithm():
 # algorithm()
 # writeToCSV(_population[0],"final.csv")
 # >>>>>>> refs/remotes/origin/master
+

@@ -7,7 +7,7 @@ labs_filename=data_path+"allot_lab.csv"
 classes_filename=data_path+"classes.csv"
 
 max_pop=16
-no_of_groups=9
+no_of_groups=15
 
 working_days=5
 working_hours=11

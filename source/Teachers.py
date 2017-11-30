@@ -1,6 +1,7 @@
 #represents courses taught
 import Value
 from CourseClass import *
+import random 
 
 # _subTeach = {}
 # _teachers = {}
@@ -29,8 +30,9 @@ class Teachers:
 		for i in range(len(l)):
 			l[i]=l[i].split(",")
 			l[i][1]=l[i][1].split(":")
-			# print(l[i])
-			_subTeach[l[i][0]] =l[i][1] 
+			random.shuffle(l[i][1])
+			_subTeach[l[i][0]] =l[i][1]
+		# printSub(_subTeach) 
 		return _subTeach
 
 	def initSlot():
@@ -51,13 +53,22 @@ class Teachers:
 		for i in _teachers:
 			_teachers[i] = [0 for y in range(Value.working_days*Value.working_hours)]
 
-	def dispTeachers():
-		global _teachers
+	def printSub(_subTeach):
+		print("HERE")
+		for i in _subTeach:
+			print(i,end= '  ')
+			print(_subTeach[i])
+
+	def dispTeachers(_teachers):
+		# global _teachers
 		# _teachers = CourseClass.read()
 		# print(_teachers["SHM"])
 		for i in _teachers:
 			print(str(i) +"  ",end="  ")
-			print( _teachers[i],end="\n\n" )
+			for j in _teachers[i]:
+				if j!=0:
+					print( j,end="  " )
+			print("\n")
 
 #	def isAlloted(alt,grp,sub):
 #
@@ -156,12 +167,7 @@ class Teachers:
 # 		# Teachers.dispTeachers()
 # 		# print("\n\n")
 # 		# return table
-# 	def printSub():
-# 		global _subTeach
-# 		print("HERE")
-# 		for i in _subTeach:
-# 			print(i,end= '  ')
-# 			print(_subTeach[i])
+	
 
 # 	def dispALT(alt):
 # 		print("ALT")
